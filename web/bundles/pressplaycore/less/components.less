@@ -1,0 +1,70 @@
+.factbox{
+    .border-radius(5px);
+    padding: 15px;
+    background-color: @grayDark;
+    color: white;
+    text-align: center;
+    font-size: @baseFontSize*1.5;
+    line-height: @baseLineHeight;
+
+    margin-bottom: 10px;
+
+    span{
+        font-size: @baseFontSize*3;
+        line-height: @baseLineHeight*2;
+        display: block;
+        margin: 0;
+    }
+
+    &:hover{
+        background-color: @gray;
+    }
+}
+
+.table{
+
+    
+
+    th, td{
+
+        input{
+            margin-bottom: 0px;
+        }
+
+    }
+
+}
+
+// Stat tabs
+// http://pea.rs
+
+ul.stats-tabs{
+    
+    .clearfix();
+    
+    list-style: none;
+    margin: 0;
+
+    li{
+        float: left;
+        margin: 0 10px 0 0;
+        padding: 0 10px 0 0;
+        border-right: 1px solid #ccc;  
+        font-size: 18px;
+        font-weight: bold;     
+
+        span {
+            display: block;
+            margin-top: 2px;
+            font-size: 13px;
+            font-weight: normal;
+        }
+    }
+    
+    li:last-child {
+        margin: 0;
+        padding: 0;
+        border: none;
+    }
+    
+}

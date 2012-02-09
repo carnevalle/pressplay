@@ -2,10 +2,60 @@
 
 {% block body %}
 <div class="row">
-    <div class="span8">
-        {{name}}
+    <div class="span12">
+
     </div>
-    <div class="span4">
+</div>        
+    <hr />
+ <div class="row">       
+    <div class="span9">
+        
+        <form>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Start time</th>
+                        <th>Stop time</th>
+                        <th>Adjustment</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td>
+                        <div class="input-prepend">
+                            <span class="add-on"><i class="icon-time"></i></span>
+                            <input class="span2" id="iconInput" type="text">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="input-prepend">
+                            <span class="add-on"><i class="icon-time"></i></span>
+                            <input class="span2" id="iconInput" type="text">
+                        </div>                    
+                    </td>
+                    <td>
+                        <div class="input-prepend">
+                            <span class="add-on"><i class="icon-time"></i></span>
+                            <input class="span2" id="iconInput" type="text">
+                        </div>                     
+                    </td>                 
+                    <td>
+                        <a class="btn btn-danger" href="#"><i class="icon-trash icon-white"></i> Delete</a>
+                    </td>                   
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <button class="btn btn-success" href="#"><i class="icon-plus icon-white"></i> Add</button>
+                    </td>
+                </tr>
+            </table>
+        </form>                
     </div>        
+    <div class="span3">
+        <div class="factbox positive">
+            <span>+25</span>
+            Timer
+        </div>
+    </div>                
 </div>
 {% endblock %}

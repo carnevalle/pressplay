@@ -1,0 +1,69 @@
+.factbox {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  padding: 15px;
+  background-color: #333333;
+  color: white;
+  text-align: center;
+  font-size: 19.5px;
+  line-height: 18px;
+  margin-bottom: 10px;
+}
+.factbox span {
+  font-size: 39px;
+  line-height: 36px;
+  display: block;
+  margin: 0;
+}
+.factbox:hover {
+  background-color: #555555;
+}
+.table th input,
+.table td input {
+  margin-bottom: 0px;
+}
+ul.stats-tabs {
+  *zoom: 1;
+  list-style: none;
+  margin: 0;
+}
+ul.stats-tabs:before,
+ul.stats-tabs:after {
+  display: table;
+  content: "";
+}
+ul.stats-tabs:after {
+  clear: both;
+}
+ul.stats-tabs li {
+  float: left;
+  margin: 0 10px 0 0;
+  padding: 0 10px 0 0;
+  border-right: 1px solid #ccc;
+  font-size: 18px;
+  font-weight: bold;
+}
+ul.stats-tabs li span {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  font-weight: normal;
+}
+ul.stats-tabs li:last-child {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+@media (max-width: 480px) {
+  
+}
+@media (max-width: 768px) {
+  
+}
+@media (min-width: 768px) and (max-width: 940px) {
+  
+}
+@media (min-width: 1200px) {
+  
+}
