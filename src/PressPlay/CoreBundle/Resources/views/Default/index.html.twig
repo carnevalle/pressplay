@@ -1,0 +1,28 @@
+{% extends 'PressPlayCoreBundle::layout.html.twig' %}
+
+{% block body %}
+<div class="row" style="margin-top: 40px;">
+    <div class="span6 offset3">
+        <h1>Login to time tracking</h1>
+        <hr/>
+        
+        <form action="{{ path("fos_user_security_check") }}" method="post">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+
+            <label for="username">Username</label>
+            <input type="text" id="username" name="_username" value="" placeholder="username" style="width: 100%"/>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="_password" placeholder="password" style="width: 100%"/>
+
+            <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
+            <label for="remember_me">Remember me</label>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Let me in!</button>
+            </div>  
+        </form>        
+        
+    </div>
+</div>
+{% endblock %}

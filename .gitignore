@@ -1,0 +1,6 @@
+*/logs/*
+*/cache/*
+web/uploads/*
+nbproject/*
+
+*.DS_Store
