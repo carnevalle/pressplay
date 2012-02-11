@@ -1,0 +1,5 @@
+services:
+    pressplay_user.my_user_manager:
+        class: PressPlay\UserBundle\Model\PressPlayUserManager
+        public: false
+        parent: fos_user.user_manager.default

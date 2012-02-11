@@ -1,5 +1,53 @@
 {% extends 'PressPlayCoreBundle::layout.html.twig' %}
 
+{% block header %}
+<script language="javascript"> 
+    
+function pad(n, len) {
+   
+    s = n.toString();
+    if (s.length < len) {
+        s = ('0000000000' + s).slice(-len);
+    }
+
+    return s;
+   
+}    
+    
+function add(n, len) {
+   
+    s = n.toString();
+    if (s.length < len) {
+        s = (s + '0000000000').slice(-len);
+    }
+
+    return s;
+   
+}     
+    
+    var timeData = [];
+    
+    for(var h = 0; h <= 24; h++){
+        
+        if(h<24){
+            for(var m = 0;m < 4; m++){
+                var hours = 15 * m;
+                timeData.push(pad(h,2)+":"+add(hours,2));    
+            }
+        }else{
+            timeData.push(pad(h,2)+":00"); 
+        }
+    }
+    
+    $(document).ready(function() {          
+        $('.timeselect').typeahead({
+            source: timeData
+        })
+    });
+
+</script> 
+{% endblock %}
+
 {% block body %}
 <div class="row">
     <div class="span12">
@@ -22,22 +70,13 @@
                 </thead>
                 <tr>
                     <td>
-                        <div class="input-prepend">
-                            <span class="add-on"><i class="icon-time"></i></span>
-                            <input class="span2" id="iconInput" type="text">
-                        </div>
+                        <input class="span2 timeselect" type="text" placeholder="i.e. 08:00">
                     </td>
                     <td>
-                        <div class="input-prepend">
-                            <span class="add-on"><i class="icon-time"></i></span>
-                            <input class="span2" id="iconInput" type="text">
-                        </div>                    
+                        <input class="span2 timeselect" type="text" placeholder="i.e. 16:00">
                     </td>
                     <td>
-                        <div class="input-prepend">
-                            <span class="add-on"><i class="icon-time"></i></span>
-                            <input class="span2" id="iconInput" type="text">
-                        </div>                     
+                        <input class="span2" type="text" placeholder="i.e. -01:30">
                     </td>                 
                     <td>
                         <a class="btn btn-danger" href="#"><i class="icon-trash icon-white"></i> Delete</a>
