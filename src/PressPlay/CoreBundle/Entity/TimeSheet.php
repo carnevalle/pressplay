@@ -3,13 +3,14 @@
 namespace PressPlay\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\UniqueConstraint;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * PressPlay\CoreBundle\Entity\TimeSheet
  *
- * @ORM\Table()
- * @ORM\Entity
+ * @ORM\Table(uniqueConstraints={@UniqueConstraint(name="one_per_day", columns={"user_id", "date"})})
+ * @ORM\Entity(repositoryClass="PressPlay\CoreBundle\Repository\TimeSheetRepository")
  */
 class TimeSheet
 {
@@ -25,14 +26,14 @@ class TimeSheet
     /**
      * @var datetime $date
      *
-     * @ORM\Column(name="date", type="datetime")
+     * @ORM\Column(name="date", type="date")
      */
     private $date;
 
     /**
      * @var text $comment
      *
-     * @ORM\Column(name="comment", type="text")
+     * @ORM\Column(name="comment", type="text", nullable=true)
      */
     private $comment;
 

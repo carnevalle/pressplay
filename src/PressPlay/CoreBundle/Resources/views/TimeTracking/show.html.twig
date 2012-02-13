@@ -1,0 +1,49 @@
+<h1>TimeTracking</h1>
+
+<table class="record_properties">
+    <tbody>
+        <tr>
+            <th>Id</th>
+            <td>{{ entity.id }}</td>
+        </tr>
+        <tr>
+            <th>Starttime</th>
+            <td>{{ entity.startTime }}</td>
+        </tr>
+        <tr>
+            <th>Stoptime</th>
+            <td>{{ entity.stopTime }}</td>
+        </tr>
+        <tr>
+            <th>Adjustment</th>
+            <td>{{ entity.adjustment }}</td>
+        </tr>
+        <tr>
+            <th>Sickday</th>
+            <td>{{ entity.sickday }}</td>
+        </tr>
+        <tr>
+            <th>Holiday</th>
+            <td>{{ entity.holiday }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<ul class="record_actions">
+    <li>
+        <a href="{{ path('timetracking') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('timetracking_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>
+        <form action="{{ path('timetracking_delete', { 'id': entity.id }) }}" method="post">
+            {{ form_widget(delete_form) }}
+            <button type="submit">Delete</button>
+        </form>
+    </li>
+</ul>

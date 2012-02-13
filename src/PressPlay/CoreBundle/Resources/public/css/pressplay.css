@@ -133,6 +133,9 @@ ul.stats-tabs li:last-child {
   padding: 0;
   border: none;
 }
+.month-navigation .selected a {
+  font-weight: bold;
+}
 @media (max-width: 480px) {
   
 }

@@ -57,8 +57,43 @@ function add(n, len) {
     <hr />
  <div class="row">       
     <div class="span9">
+
+        
+        
+        <form action="{{ path('timetracking_create') }}" method="post" {{ form_enctype(form) }}>
+        
+        {{ form_errors(form) }}
+
+        <div>
+            {{ form_label(form.startTime) }}
+            {{ form_errors(form.startTime) }}
+            {{ form_widget(form.startTime, { 'attr': {'class': 'span2 timeselect', 'placeholder':'i.e. 08:00'} }) }}
+        </div>
+
+        <div>
+            {{ form_label(form.stopTime) }}
+            {{ form_errors(form.stopTime) }}
+            {{ form_widget(form.stopTime, { 'attr': {'class': 'span2 timeselect', 'placeholder':'i.e. 16:00'} }) }}
+        </div>
+
+        <div>
+            {{ form_label(form.adjustment) }}
+            {{ form_errors(form.adjustment) }}
+            {{ form_widget(form.adjustment, { 'attr': {'class': 'span2'} }) }}
+        </div>            
+            
+        {{ form_rest(form) }}        
+        
+            <button class="btn btn-primary" type="submit"><i class="icon-ok-sign icon-white"></i> Save</button>
+        </form>
+            
+        <h1>
+            {{ date|date("j. F Y") }}
+        </h1>      
         
         <form>
+            <input type="hidden" name="date" value="{{ date|date('Ymd') }}">
+            
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
@@ -79,7 +114,7 @@ function add(n, len) {
                         <input class="span2" type="text" placeholder="i.e. -01:30">
                     </td>                 
                     <td>
-                        <a class="btn btn-danger" href="#"><i class="icon-trash icon-white"></i> Delete</a>
+                        <!-- <a class="btn btn-danger" href="#"><i class="icon-trash icon-white"></i> Delete</a> -->
                     </td>                   
                 </tr>
                 <tr>
@@ -94,6 +129,50 @@ function add(n, len) {
         <div class="factbox positive">
             <span>+25</span>
             Timer
+        </div>
+            
+        <div class="month-navigation">
+            <table class="table table-striped table-condensed">
+                
+                {% for i in 1..date|date('t') %}
+                    {% if i < 10 %}
+                        {% set day = "0"~i %}    
+                    {% else %}
+                        {% set day = i %}
+                    {% endif %}
+                
+                
+                    {% set d = date|date('Y') ~ date|date('m') ~ day %}
+
+                    {% set css = "" %}
+                    {% if date|date("Ymd") == d %}
+                    {% set css = "selected" %}
+                    {% elseif today|date("Ymd") == d %}    
+                    {% set css = "today" %}
+                    {% endif %}                 
+                
+                <tr class="{{css}}">
+                    <td>        
+                        <a href="{{ path('dashboard_home', {'date': d })}}" style="display: block">
+                            {% if date|date("Ymd") == d %}
+                                <span class="icon-play"></span>    
+                            {% endif %}                       
+                            {{i}}. {{ date|date('F') }}
+                        
+                            {% if date|date("Ymd") == d %}
+                                <span class="label label-info">selected</span>    
+                            {% endif %}                             
+                            
+                            {% if today|date("Ymd") == d %}
+                                <span class="label">today</span>    
+                            {% endif %}                               
+                        </a>
+                    </td>
+                </tr>
+
+                {% endfor %} 
+                
+            </table>
         </div>
     </div>                
 </div>

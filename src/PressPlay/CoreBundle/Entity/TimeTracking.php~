@@ -172,4 +172,24 @@ class TimeTracking
     {
         return $this->adjustment;
     }
+
+    /**
+     * Set timesheet
+     *
+     * @param PressPlay\CoreBundle\Entity\TimeSheet $timesheet
+     */
+    public function setTimesheet(\PressPlay\CoreBundle\Entity\TimeSheet $timesheet)
+    {
+        $this->timesheet = $timesheet;
+    }
+
+    /**
+     * Get timesheet
+     *
+     * @return PressPlay\CoreBundle\Entity\TimeSheet 
+     */
+    public function getTimesheet()
+    {
+        return $this->timesheet;
+    }
 }

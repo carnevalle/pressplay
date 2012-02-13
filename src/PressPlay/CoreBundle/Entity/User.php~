@@ -31,4 +31,34 @@ class User extends BaseUser
         parent::__construct();
         $this->timesheets = new ArrayCollection();
     }
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Add timesheets
+     *
+     * @param PressPlay\CoreBundle\Entity\TimeSheet $timesheets
+     */
+    public function addTimeSheet(\PressPlay\CoreBundle\Entity\TimeSheet $timesheets)
+    {
+        $this->timesheets[] = $timesheets;
+    }
+
+    /**
+     * Get timesheets
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getTimesheets()
+    {
+        return $this->timesheets;
+    }
 }
