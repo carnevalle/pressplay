@@ -32,6 +32,11 @@
 {% endspaceless %}
 {% endblock %}
 
+{% block field_widget %}
+    {% set type = type|default('number') %}
+    <input type="{{ type }}" {{ block('widget_attributes') }} value="{{ value }}" />
+{% endblock field_widget %}
+
 {% block header %}
 <script language="javascript"> 
 
@@ -49,7 +54,10 @@
 
     $(document).ready(function() {          
         $('a.add_new_timeregistration').click(function(event){
-            addNewTimeRegistration();
+            
+            if(confirm('are you sure you want to add another row to the form?')){
+                addNewTimeRegistration();
+            }
         });
     });
 
@@ -80,14 +88,13 @@
             
             {{ form_row(form.timetrackings) }}
             
-            <a class="btn btn-success add_new_timeregistration"><i class="icon-plus icon-white"></i> Add registration</a>               
-            
             <hr>
             
             {{ form_rest(form) }}                 
             
             <hr>
             
+            <a class="btn btn-success add_new_timeregistration"><i class="icon-plus icon-white"></i> Add new registration</a>               
             <button class="btn btn-primary" type="submit"><i class="icon-ok-sign icon-white"></i> Save registrations</button>               
         </form>
         
