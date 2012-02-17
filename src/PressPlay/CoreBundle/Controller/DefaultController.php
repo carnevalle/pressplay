@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use \DateTime;
 use PressPlay\CoreBundle\Entity\TimeTracking;
 use PressPlay\CoreBundle\Form\TimeTrackingType;
+use PressPlay\CoreBundle\Form\TimeSheetType;
 use PressPlay\CoreBundle\Entity\TimeSheet;
 
 class DefaultController extends Controller
@@ -62,19 +63,17 @@ class DefaultController extends Controller
             $em->flush();                         
         }
         
+        
         $today = new DateTime();
         $yesterday = strtotime($date->format('Ymd').' -1 day');
         
-        $entity = new TimeTracking();
-        $form   = $this->createForm(new TimeTrackingType(), $entity);
+        $form = $this->createForm(new TimeSheetType(), $timesheet);
         
         return array(
             'timesheet' => $timesheet,
-            'date' => $date,
             'today' => $today,
             'yesterday' => $yesterday,
-            'entity' => $entity,
-            'form'   => $form->createView()
+            'form' => $form->createView()
         );
     }
 }

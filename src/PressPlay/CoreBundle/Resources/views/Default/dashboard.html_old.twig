@@ -1,0 +1,227 @@
+{% extends 'PressPlayCoreBundle::layout.html.twig' %}
+
+{% block header %}
+<script language="javascript"> 
+    
+    function pad(n, len) {
+
+        s = n.toString();
+        if (s.length < len) {
+            s = ('0000000000' + s).slice(-len);
+        }
+
+        return s;
+
+    }    
+
+    function add(n, len) {
+
+        s = n.toString();
+        if (s.length < len) {
+            s = (s + '0000000000').slice(-len);
+        }
+
+        return s;
+
+    }     
+    
+    var timeData = [];
+    
+    for(var h = 0; h <= 24; h++){
+        
+        if(h<24){
+            for(var m = 0;m < 4; m++){
+                var hours = 15 * m;
+                timeData.push(pad(h,2)+":"+add(hours,2));    
+            }
+        }else{
+            timeData.push(pad(h,2)+":00"); 
+        }
+    }
+
+    function addTagForm() {
+        // Get the div that holds the collection of tags
+        var collectionHolder = $('#pressplay_corebundle_timesheettype_timetrackings');
+        
+        // Get the data-prototype we explained earlier
+        var prototype = collectionHolder.attr('data-prototype');
+        // Replace '$$name$$' in the prototype's HTML to
+        // instead be a number based on the current collection's length.
+        form = prototype.replace(/\$\$name\$\$/g, collectionHolder.children().length);
+        // Display the form in the page
+        collectionHolder.append(form);
+    }
+   
+
+
+    $(document).ready(function() {          
+        $('.timeselect').typeahead({
+            source: timeData
+        })
+        
+        // Add the link to add tags
+        $('.timetrackings').append('<li><a href="#" class="add_tag_link">Register new interval</a></li>');
+        // When the link is clicked we add the field to input another tag
+        $('a.add_tag_link').click(function(event){
+            addTagForm();
+        });        
+    });
+    
+    
+
+</script> 
+{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="span12">
+        <h1>{{app.user.fullname}}</h1>
+    </div>
+</div>        
+    <hr />
+ <div class="row">       
+    <div class="span9">
+
+        <form action="{{ path('timetracking_create') }}" method="post" {{ form_enctype(form2) }}>
+            {{ form_widget(form2) }}
+
+        <h3>Registrations</h3>
+        <ul class="timetrackings">
+            {# iterate over each existing tag and render its only field: name #}
+                {% for tracking in form2.timetrackings %}
+                <li>{{ form_row(tracking.startTime) }}</li>
+                {% endfor %}
+        </ul>
+
+        <div id="test">
+        </div>
+        
+        {{ form_rest(form) }}  
+        
+            <p>
+                <button type="submit">Create</button>
+            </p>        
+        </form>
+        
+        <form action="{{ path('timetracking_create') }}" method="post" {{ form_enctype(form) }}>
+        
+        {{ form_errors(form) }}
+
+        <div>
+            {{ form_label(form.startTime) }}
+            {{ form_errors(form.startTime) }}
+            {{ form_widget(form.startTime, { 'attr': {'class': 'span2 timeselect', 'placeholder':'i.e. 08:00'} }) }}
+        </div>
+
+        <div>
+            {{ form_label(form.stopTime) }}
+            {{ form_errors(form.stopTime) }}
+            {{ form_widget(form.stopTime, { 'attr': {'class': 'span2 timeselect', 'placeholder':'i.e. 16:00'} }) }}
+        </div>
+
+        <div>
+            {{ form_label(form.adjustment) }}
+            {{ form_errors(form.adjustment) }}
+            {{ form_widget(form.adjustment, { 'attr': {'class': 'span2'} }) }}
+        </div>            
+            
+        <div>
+            {{ form_label(form.absent) }}
+            {{ form_errors(form.absent) }}
+            {{ form_widget(form.absent) }}
+        </div>                        
+            
+        {{ form_rest(form) }}        
+        
+            <button class="btn btn-primary" type="submit"><i class="icon-ok-sign icon-white"></i> Save</button>
+        </form>
+            
+        <h1>
+            {{ timesheet.date|date("j. F Y") }}
+        </h1>      
+        
+        <form>
+            
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Start time</th>
+                        <th>Stop time</th>
+                        <th>Adjustment</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td>
+                        <input class="span2 timeselect" type="text" placeholder="i.e. 08:00">
+                    </td>
+                    <td>
+                        <input class="span2 timeselect" type="text" placeholder="i.e. 16:00">
+                    </td>
+                    <td>
+                        <input class="span2" type="text" placeholder="i.e. -01:30">
+                    </td>                 
+                    <td>
+                        <!-- <a class="btn btn-danger" href="#"><i class="icon-trash icon-white"></i> Delete</a> -->
+                    </td>                   
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <button class="btn btn-success" href="#"><i class="icon-plus icon-white"></i> Add</button>
+                    </td>
+                </tr>
+            </table>
+        </form>                
+    </div>        
+    <div class="span3">
+        <div class="factbox positive">
+            <span>+25</span>
+            Timer
+        </div>
+            
+        <div class="month-navigation">
+            <table class="table table-striped table-condensed">
+                
+                {% for i in 1..timesheet.date|date('t') %}
+                    {% if i < 10 %}
+                        {% set day = "0"~i %}    
+                    {% else %}
+                        {% set day = i %}
+                    {% endif %}
+                
+                
+                    {% set d = timesheet.date|date('Y') ~ timesheet.date|date('m') ~ day %}
+
+                    {% set css = "" %}
+                    {% if timesheet.date|date("Ymd") == d %}
+                    {% set css = "selected" %}
+                    {% elseif today|date("Ymd") == d %}    
+                    {% set css = "today" %}
+                    {% endif %}                 
+                
+                <tr class="{{css}}">
+                    <td>        
+                        <a href="{{ path('dashboard_home', {'date': d })}}" style="display: block">
+                            {% if timesheet.date|date("Ymd") == d %}
+                                <span class="icon-play"></span>    
+                            {% endif %}                       
+                            {{i}}. {{ timesheet.date|date('F') }}
+                        
+                            {% if timesheet.date|date("Ymd") == d %}
+                                <span class="label label-info">selected</span>    
+                            {% endif %}                             
+                            
+                            {% if today|date("Ymd") == d %}
+                                <span class="label">today</span>    
+                            {% endif %}                               
+                        </a>
+                    </td>
+                </tr>
+
+                {% endfor %} 
+                
+            </table>
+        </div>
+    </div>                
+</div>
+{% endblock %}

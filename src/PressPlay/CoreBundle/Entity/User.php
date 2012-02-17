@@ -21,6 +21,20 @@ class User extends BaseUser
     protected $id;
     
     /**
+     * @var string $firstname
+     *
+     * @ORM\Column(name="firstname", type="string", length=255, nullable=true)
+     */
+    private $firstname;
+    
+    /**
+     * @var string $lastname
+     *
+     * @ORM\Column(name="lastname", type="string", length=255, nullable=true)
+     */
+    private $lastname;      
+    
+    /**
      *
      * @ORM\OneToMany(targetEntity="TimeSheet", mappedBy="user")
      */
@@ -42,6 +56,36 @@ class User extends BaseUser
         return $this->id;
     }
 
+    public function getFirstname()
+    {
+        return $this->firstname;
+    }    
+
+    public function setFirstname($firstname)
+    {
+        $this->firstname = $firstname;
+    }    
+    
+    public function getLastname()
+    {
+        return $this->lastname;
+    }    
+    
+    public function setLastname($lastname)
+    {
+        $this->lastname = $lastname;
+    }  
+    
+    /**
+     * Get full name
+     *
+     * @return string 
+     */
+    public function getFullname()
+    {
+        return $this->firstname." ".$this->lastname;
+    }     
+    
     /**
      * Add timesheets
      *

@@ -1,0 +1,284 @@
+{% extends 'PressPlayCoreBundle::layout.html.twig' %}
+
+{% block header %}
+<script language="javascript"> 
+    
+    function pad(n, len) {
+
+        s = n.toString();
+        if (s.length < len) {
+            s = ('0000000000' + s).slice(-len);
+        }
+
+        return s;
+
+    }    
+
+    function add(n, len) {
+
+        s = n.toString();
+        if (s.length < len) {
+            s = (s + '0000000000').slice(-len);
+        }
+
+        return s;
+
+    }     
+    
+    var timeData = [];
+    
+    for(var h = 0; h <= 24; h++){
+        
+        if(h<24){
+            for(var m = 0;m < 4; m++){
+                var hours = 15 * m;
+                timeData.push(pad(h,2)+":"+add(hours,2));    
+            }
+        }else{
+            timeData.push(pad(h,2)+":00"); 
+        }
+    }
+
+    function removeTimeTrackingRow(el){
+        if(!confirm("Are you sure you want to delete this registration?")){
+            return false;
+        }
+        
+        console.log("I want to remove row");
+        var row = $(el).parent().parent();
+        var hidden = row.find("input[type='hidden']");
+        
+        console.log(hidden.val());
+        if(hidden.val() == "new"){
+            console.log("just remove it");
+            row.fadeOut('fast', function() {
+                $(this).remove();
+            })
+        }else{
+            console.log("delete and remove");
+            row.fadeOut('fast', function() {
+                $(this).remove();
+            })            
+        }
+    }
+
+    function addTimeTrackingForm(){
+        var container = $("#registration_table");
+        
+        container.append( _.template( $("#registration_row").html()) );
+        
+        container.find("a.remove_row").off('click').click(function(event){
+            removeTimeTrackingRow(this);
+        });     
+        
+        $('.timeselect').typeahead({
+            source: timeData
+        })        
+    }
+
+    function validate_time(t,st,et){
+       t = t.split(/:/);
+       st = st.split(/:/);
+       et = et.split(/:/);
+       return (t[0] < st[0] 
+            || t[0] > et[0] 
+            || (t[0] == st[0] && t[1] < st[1])
+            || (t[0] == et[0] && t[1] > et[1]));
+    }
+    
+    function validate_interval(start, stop){
+        start = start.split(/:/);
+        stop = stop.split(/:/);
+        
+        return stop[0] > start[0];
+    }
+
+    function validate_form(){
+        
+        var isIntervalsOverlapping = false;
+        var isIntervalsIncomplete = false;
+        
+        var form = $('#registration_form');
+        
+        var startTimes = form.find("input[name='startTime[]']");
+        var stopTimes = form.find("input[name='stopTime[]']");
+        var adjustments = form.find("input[name='adjustments[]']");
+        var intervals = new Array();
+        
+        // we parse the intervals into an array
+        for(var i = 0; i<startTimes.length;i++){
+            var interval = {
+                "startTime" : $(startTimes[i]).val(),
+                "stopTime" : $(stopTimes[i]).val(),
+                "adjustment" : $(adjustments[i]).val()
+            }
+            intervals.push(interval);
+        }
+        
+        for(i = 0; i<intervals.length;i++){
+            console.log(intervals[i]);
+            
+            try
+              {
+                console.log(validate_interval(intervals[i].startTime, intervals[i].stopTime));
+              }
+            catch(err)
+              {
+                  console.log(err);
+              }
+            
+        }        
+    }
+
+    $(document).ready(function() {          
+        $('.timeselect').typeahead({
+            source: timeData
+        })
+        
+        //alert(new Date($("input[type='hidden'][name'date']").val()));
+        
+        // When the link is clicked we add the field to input another tag
+        $('button#add_row_btn').click(function(event){
+            addTimeTrackingForm();
+            return false;
+        }); 
+        
+        $("a.remove_row").click(function(event){
+            removeTimeTrackingRow(this);
+            return false;
+            
+        });
+        
+        /*
+        $('#registration_form').submit(function() {
+            validate_form();
+            return false;
+        });        
+        */
+    });
+    
+    
+
+</script> 
+
+<script type="text/template" id="registration_row">
+    <tr>
+        <td>
+            <input type="hidden" name="timetrack_id[]" value="new">
+            <input class="span2 timeselect" name="startTime[]" type="text" placeholder="i.e. 08:00">
+        </td>
+        <td>
+            <input class="span2 timeselect" name="stopTime[]" type="text" placeholder="i.e. 16:00">
+        </td>
+        <td>
+            <input class="span2" type="text" name="adjustment[]" placeholder="i.e. -01:30">
+        </td>                 
+        <td>
+            <a class="btn btn-danger remove_row" href="#"><i class="icon-trash icon-white"></i></a>
+        </td>                   
+    </tr>
+</script>
+
+{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="span12">
+        <h1>{{app.user.fullname}}</h1>
+    </div>
+</div>        
+    <hr />
+ <div class="row">       
+    <div class="span9">
+
+        <h1>
+            {{ timesheet.date|date("j. F Y") }}
+        </h1>      
+        
+        <form id="registration_form" action="{{ path("timesheet_submit", { 'id': timesheet.id }) }}" method="post">
+            
+            <input type="hidden" name="date" value="{{ timesheet.date|date("Y-m-d") }}">
+            
+            <table class="table table-bordered" id="registration_table">
+                <thead>
+                    <tr>
+                        <th>Start time</th>
+                        <th>Stop time</th>
+                        <th>Adjustment</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input type="hidden" name="timetrack_id[]" value="old">
+                            <input class="span2 timeselect" name="startTime[]" type="text" placeholder="i.e. 08:00">
+                        </td>
+                        <td>
+                            <input class="span2 timeselect" name="stopTime[]" type="text" placeholder="i.e. 16:00">
+                        </td>
+                        <td>
+                            <input class="span2" type="text" name="adjustment[]" placeholder="i.e. -01:30">
+                        </td>                 
+                        <td>
+                            <a class="btn btn-danger remove_row" href="#"><i class="icon-trash icon-white"></i></a>
+                        </td>                   
+                    </tr>
+                </tbody>
+            </table>
+            <button id="add_row_btn" class="btn btn-success" type="submit"><i class="icon-plus icon-white"></i> Add new row</button>      
+            <button class="btn btn-primary" type="submit"><i class="icon-ok-sign icon-white"></i> Save time</button>                  
+        </form>                
+    </div>        
+    <div class="span3">
+        <div class="factbox positive">
+            <span>+25</span>
+            Timer
+        </div>
+            
+        <div class="month-navigation">
+            <table class="table table-striped table-condensed">
+                
+                {% for i in 1..timesheet.date|date('t') %}
+                    {% if i < 10 %}
+                        {% set day = "0"~i %}    
+                    {% else %}
+                        {% set day = i %}
+                    {% endif %}
+                
+                
+                    {% set d = timesheet.date|date('Y') ~ timesheet.date|date('m') ~ day %}
+
+                    {% set css = "" %}
+                    {% if timesheet.date|date("Ymd") == d %}
+                    {% set css = "selected" %}
+                    {% elseif today|date("Ymd") == d %}    
+                    {% set css = "today" %}
+                    {% endif %}                 
+                
+                <tr class="{{css}}">
+                    <td>        
+                        <a href="{{ path('dashboard_home', {'date': d })}}" style="display: block">
+                            {% if timesheet.date|date("Ymd") == d %}
+                                <span class="icon-play"></span>    
+                            {% endif %}                       
+                            {{i}}. {{ timesheet.date|date('F') }}
+                        
+                            {% if timesheet.date|date("Ymd") == d %}
+                                <span class="label label-info">selected</span>    
+                            {% endif %}                             
+                            
+                            {% if today|date("Ymd") == d %}
+                                <span class="label">today</span>    
+                            {% endif %}                               
+                        </a>
+                    </td>
+                </tr>
+
+                {% endfor %} 
+                
+            </table>
+        </div>
+    </div>                
+</div>
+{% endblock %}

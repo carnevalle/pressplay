@@ -1,7 +1,7 @@
 .factbox{
     .border-radius(5px);
     padding: 15px;
-    background-color: @grayDark;
+
     color: white;
     text-align: center;
     font-size: @baseFontSize*1.5;
@@ -9,6 +9,13 @@
 
     margin-bottom: 10px;
 
+    @shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
+    .box-shadow(@shadow);
+    text-shadow: 0 1px 1px rgba(255,255,255,.75);
+
+    border: 1px solid #ccc;
+    border-bottom-color: #bbb;
+    .buttonBackground(#5bc0de, #2f96b4);
     span{
         font-size: @baseFontSize*3;
         line-height: @baseLineHeight*2;
@@ -18,6 +25,14 @@
 
     &:hover{
         background-color: @gray;
+    }
+
+    &.positive{
+        .buttonBackground(#62c462, #51a351);
+    }
+
+    &.negative{
+        .buttonBackground(#ee5f5b, #bd362f);
     }
 }
 
@@ -67,4 +82,16 @@ ul.stats-tabs{
         border: none;
     }
     
+}
+
+.month-navigation{
+    .selected{
+        a{
+            font-weight: bold;
+        }
+    }
+
+    .today{
+
+    }
 }

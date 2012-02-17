@@ -31,35 +31,28 @@ class TimeTracking
     /**
      * @var time $stopTime
      *
-     * @ORM\Column(name="stopTime", type="time")
+     * @ORM\Column(name="stopTime", type="time", nullable=true)
      */
     private $stopTime;
 
     /**
      * @var decimal $adjustment
      *
-     * @ORM\Column(name="adjustment", type="decimal")
+     * @ORM\Column(name="adjustment", type="decimal", nullable=true)
      */
-    private $adjustment;
+    private $adjustment; 
 
     /**
-     * @var boolean $sickday
+     * @var string $absent
      *
-     * @ORM\Column(name="sickday", type="boolean")
+     * @ORM\Column(name="absent", type="string", length=255, nullable=true)
      */
-    private $sickday;
-
-    /**
-     * @var boolean $holiday
-     *
-     * @ORM\Column(name="holiday", type="boolean")
-     */
-    private $holiday;    
-
+    private $absent;        
+    
     /**
      *
      * @ORM\ManyToOne(targetEntity="TimeSheet", inversedBy="timetrackings")
-     * @ORM\JoinColumn(name="timesheet_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="timesheet_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $timesheet;     
     
@@ -114,46 +107,6 @@ class TimeTracking
     }
 
     /**
-     * Set sickday
-     *
-     * @param boolean $sickday
-     */
-    public function setSickday($sickday)
-    {
-        $this->sickday = $sickday;
-    }
-
-    /**
-     * Get sickday
-     *
-     * @return boolean 
-     */
-    public function getSickday()
-    {
-        return $this->sickday;
-    }
-
-    /**
-     * Set holiday
-     *
-     * @param boolean $holiday
-     */
-    public function setHoliday($holiday)
-    {
-        $this->holiday = $holiday;
-    }
-
-    /**
-     * Get holiday
-     *
-     * @return boolean 
-     */
-    public function getHoliday()
-    {
-        return $this->holiday;
-    }
-
-    /**
      * Set adjustment
      *
      * @param decimal $adjustment
@@ -191,5 +144,25 @@ class TimeTracking
     public function getTimesheet()
     {
         return $this->timesheet;
+    }
+
+    /**
+     * Set absent
+     *
+     * @param string $absent
+     */
+    public function setAbsent($absent)
+    {
+        $this->absent = $absent;
+    }
+
+    /**
+     * Get absent
+     *
+     * @return string 
+     */
+    public function getAbsent()
+    {
+        return $this->absent;
     }
 }

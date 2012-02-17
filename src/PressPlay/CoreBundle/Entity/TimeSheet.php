@@ -46,7 +46,7 @@ class TimeSheet
 
     /**
      *
-     * @ORM\OneToMany(targetEntity="TimeTracking", mappedBy="timesheet")
+     * @ORM\OneToMany(targetEntity="TimeTracking", mappedBy="timesheet", cascade={"persist"})
      */
     protected $timetrackings;      
     
@@ -135,6 +135,16 @@ class TimeSheet
         $this->timetrackings[] = $timetrackings;
     }
 
+    /**
+     * Set timetrackings
+     *
+     * @param PressPlay\CoreBundle\Entity\TimeTracking $timetrackings
+     */
+    public function setTimeTrackings($timetrackings)
+    {
+        $this->timetrackings = $timetrackings;
+    }    
+    
     /**
      * Get timetrackings
      *
