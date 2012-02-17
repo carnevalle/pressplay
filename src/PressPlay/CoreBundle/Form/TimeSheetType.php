@@ -14,8 +14,20 @@ class TimeSheetType extends AbstractType
                 'type' => new TimeTrackingType(),
                 'allow_add' => true,
                 'by_reference' => false,                
-                ))              
+                ))  
+            ->add('absent', 'choice', array(
+                'choices' => array(
+                    'sickday' => 'Sickday',
+                    'holiday' => 'Holiday'
+                ),
+                'required'    => false,
+                'empty_value' => 'Choose reason for absence',
+                'empty_data'  => null,
+                'label'     => 'Absent?'
+            ))                
         ;
+        
+        $builder->get('absent')->setRequired(false);
     }
 
     public function getDefaultOptions(array $options)
@@ -27,6 +39,6 @@ class TimeSheetType extends AbstractType
     
     public function getName()
     {
-        return 'pressplay_corebundle_timesheettype';
+        return 'timesheet';
     }
 }

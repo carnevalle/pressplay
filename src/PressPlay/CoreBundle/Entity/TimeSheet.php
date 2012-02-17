@@ -38,6 +38,13 @@ class TimeSheet
     private $comment;
 
     /**
+     * @var string $absent
+     *
+     * @ORM\Column(name="absent", type="string", length=255, nullable=true)
+     */
+    private $absent;     
+    
+    /**
      *
      * @ORM\ManyToOne(targetEntity="User", inversedBy="timesheets")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
@@ -154,4 +161,25 @@ class TimeSheet
     {
         return $this->timetrackings;
     }
+    
+
+    /**
+     * Set absent
+     *
+     * @param string $absent
+     */
+    public function setAbsent($absent)
+    {
+        $this->absent = $absent;
+    }
+
+    /**
+     * Get absent
+     *
+     * @return string 
+     */
+    public function getAbsent()
+    {
+        return $this->absent;
+    }    
 }

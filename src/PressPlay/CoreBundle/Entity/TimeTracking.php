@@ -38,16 +38,9 @@ class TimeTracking
     /**
      * @var decimal $adjustment
      *
-     * @ORM\Column(name="adjustment", type="decimal", nullable=true)
+     * @ORM\Column(name="adjustment", type="decimal", precision=4, scale=2, nullable=true)
      */
-    private $adjustment; 
-
-    /**
-     * @var string $absent
-     *
-     * @ORM\Column(name="absent", type="string", length=255, nullable=true)
-     */
-    private $absent;        
+    private $adjustment;        
     
     /**
      *
@@ -144,25 +137,5 @@ class TimeTracking
     public function getTimesheet()
     {
         return $this->timesheet;
-    }
-
-    /**
-     * Set absent
-     *
-     * @param string $absent
-     */
-    public function setAbsent($absent)
-    {
-        $this->absent = $absent;
-    }
-
-    /**
-     * Get absent
-     *
-     * @return string 
-     */
-    public function getAbsent()
-    {
-        return $this->absent;
     }
 }

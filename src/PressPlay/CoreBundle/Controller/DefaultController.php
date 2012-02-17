@@ -65,14 +65,14 @@ class DefaultController extends Controller
         
         
         $today = new DateTime();
-        $yesterday = strtotime($date->format('Ymd').' -1 day');
-        
+        //$yesterday = strtotime($date->format('Ymd').' -1 day');
+
         $form = $this->createForm(new TimeSheetType(), $timesheet);
         
         return array(
             'timesheet' => $timesheet,
             'today' => $today,
-            'yesterday' => $yesterday,
+            //'yesterday' => $yesterday,
             'form' => $form->createView()
         );
     }

@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PressPlay\CoreBundle\Entity\TimeSheet;
 use PressPlay\CoreBundle\Form\TimeSheetType;
+use \DateTime;
 
 /**
  * TimeSheet controller.
@@ -131,19 +132,19 @@ class TimeSheetController extends Controller
      *
      * @Route("/{id}/update", name="timesheet_update")
      * @Method("post")
-     * @Template("PressPlayCoreBundle:TimeSheet:edit.html.twig")
+     * @Template("PressPlayCoreBundle:Default:dashboard.html.twig")
      */
     public function updateAction($id)
     {
         $em = $this->getDoctrine()->getEntityManager();
 
-        $entity = $em->getRepository('PressPlayCoreBundle:TimeSheet')->find($id);
+        $timesheet = $em->getRepository('PressPlayCoreBundle:TimeSheet')->find($id);
 
-        if (!$entity) {
+        if (!$timesheet) {
             throw $this->createNotFoundException('Unable to find TimeSheet entity.');
         }
 
-        $editForm   = $this->createForm(new TimeSheetType(), $entity);
+        $editForm   = $this->createForm(new TimeSheetType(), $timesheet);
         $deleteForm = $this->createDeleteForm($id);
 
         $request = $this->getRequest();
@@ -152,20 +153,25 @@ class TimeSheetController extends Controller
 
         if ($editForm->isValid()) {
             
-            $timetrackings = $entity->getTimetrackings();
+            $timetrackings = $timesheet->getTimetrackings();
             foreach($timetrackings as $timetracking){
-                $timetracking->setTimesheet($entity);
+                $timetracking->setTimesheet($timesheet);
             }                        
             
-            $em->persist($entity);
+            $em->persist($timesheet);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('timesheet_edit', array('id' => $id)));
+            $this->get('session')->setFlash('confirmation', '');
+            
+            return $this->redirect($this->generateUrl('dashboard_home', array('date' => $timesheet->getDate()->format("Ymd"))));
         }
 
+        $today = new DateTime();
+        
         return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
+            'timesheet'   => $timesheet,
+            'today'       => $today,
+            'form'        => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
     }

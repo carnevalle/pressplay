@@ -3,8 +3,22 @@
 {% block header %}
 <script language="javascript"> 
 
-    $(document).ready(function() {          
+    function addNewTimeRegistration() {
+        // Get the div that holds the collection of tags
+        var collectionHolder = $('#timesheet_timetrackings');
+        // Get the data-prototype we explained earlier
+        var prototype = collectionHolder.attr('data-prototype');
+        // Replace '$$name$$' in the prototype's HTML to
+        // instead be a number based on the current collection's length.
+        form = prototype.replace(/\$\$name\$\$/g, collectionHolder.children().length);
+        // Display the form in the page
+        collectionHolder.append(form);
+    }
 
+    $(document).ready(function() {          
+        $('a.add_new_timeregistration').click(function(event){
+            addNewTimeRegistration();
+        });
     });
 
 </script> 
@@ -25,18 +39,22 @@
             {{ timesheet.date|date("j. F Y") }}
         </h1>      
 
+        {% if app.session.hasFlash('confirmation') %}
+            <div class="alert alert-success">
+                <a class="close" data-dismiss="alert">×</a>
+                <h4 class="alert-heading">Your time has been registered!</h4>                
+                Have a nice day!
+                {{ app.session.flash('confirmation') }}
+            </div>        
+        {% endif %}        
+        
         <form action="{{ path('timesheet_update', { 'id': timesheet.id }) }}" method="post" {{ form_enctype(form) }}>        
-            <ul>
-                {% for timetracking in form.timetrackings %}
-                <li>{{ form_row(timetracking.startTime) }}</li>
-                <li>{{ form_row(timetracking.stopTime) }}</li>
-                <li>{{ form_row(timetracking.adjustment) }}</li>
-                <li>{{ form_row(timetracking.absent) }}</li>
-                {% endfor %}
-            </ul>
-
-            {{ form_rest(form) }}  
-            <button class="btn btn-primary" type="submit"><i class="icon-ok-sign icon-white"></i> Save</button>               
+                
+            {{ form_row(form.timetrackings) }}
+            
+            {{ form_rest(form) }}                 
+            <a class="btn btn-success add_new_timeregistration"><i class="icon-plus icon-white"></i> Add registration</a>               
+            <button class="btn btn-primary" type="submit"><i class="icon-ok-sign icon-white"></i> Save registrations</button>               
         </form>
         
     </div>        
