@@ -1,5 +1,37 @@
 {% extends 'PressPlayCoreBundle::layout.html.twig' %}
 
+{% form_theme form _self %}
+
+{% block form_widget %}
+{% spaceless %}
+    <div {{ block('widget_container_attributes') }}>
+        {{ block('field_rows') }}
+        {{ form_rest(form) }}
+    </div>
+{% endspaceless %}
+{% endblock form_widget %}
+
+{% block field_row %}
+{% spaceless %}
+    <div>
+        {{ form_label(form, label|default(null)) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form) }}
+    </div>
+{% endspaceless %}
+{% endblock field_row %}
+
+{% block _timesheet_timetrackings_widget %}
+{% spaceless %}
+    {% if prototype is defined %}
+        {% set attr = attr|merge({'data-prototype': form_row(prototype) }) %}
+    {% endif %}
+    <div class="timetracking-form-container">
+    {{ block('form_widget') }}
+    </div>        
+{% endspaceless %}
+{% endblock %}
+
 {% block header %}
 <script language="javascript"> 
 
@@ -28,16 +60,12 @@
 {% block body %}
 <div class="row">
     <div class="span12">
-        <h1>{{app.user.fullname}}</h1>
+        <h1>{{ timesheet.date|date("j. F Y") }} <small>{{app.user.fullname}}</small></h1>
     </div>
 </div>        
     <hr />
  <div class="row">       
     <div class="span9">
-
-        <h1>
-            {{ timesheet.date|date("j. F Y") }}
-        </h1>      
 
         {% if app.session.hasFlash('confirmation') %}
             <div class="alert alert-success">
@@ -49,19 +77,31 @@
         {% endif %}        
         
         <form action="{{ path('timesheet_update', { 'id': timesheet.id }) }}" method="post" {{ form_enctype(form) }}>        
-                
+            
             {{ form_row(form.timetrackings) }}
             
-            {{ form_rest(form) }}                 
             <a class="btn btn-success add_new_timeregistration"><i class="icon-plus icon-white"></i> Add registration</a>               
+            
+            <hr>
+            
+            {{ form_rest(form) }}                 
+            
+            <hr>
+            
             <button class="btn btn-primary" type="submit"><i class="icon-ok-sign icon-white"></i> Save registrations</button>               
         </form>
         
     </div>        
     <div class="span3">
-        <div class="factbox positive">
-            <span>+25</span>
-            Timer
+        
+        {% if timesheet.totalHours < 8 %}
+        {% set colorcss = "negative" %}
+        {% else %}
+        {% set colorcss = "positive" %}
+        {% endif %}
+        <div class="factbox {{colorcss}}">
+            <span>{{timesheet.totalHours}}</span>
+            Hours today
         </div>
             
         <div class="month-navigation">

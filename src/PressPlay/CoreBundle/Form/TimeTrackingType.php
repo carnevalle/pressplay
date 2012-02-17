@@ -35,7 +35,7 @@ class TimeTrackingType extends AbstractType
 
     public function getName()
     {
-        return 'pressplay_corebundle_timetrackingtype';
+        return 'timetracking';
     }
     
 }

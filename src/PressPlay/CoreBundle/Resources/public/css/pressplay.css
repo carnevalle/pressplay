@@ -136,6 +136,29 @@ ul.stats-tabs li:last-child {
 .month-navigation .selected a {
   font-weight: bold;
 }
+#timesheet_timetrackings > div > label {
+  display: none;
+}
+#timesheet_timetrackings > div > div {
+  *zoom: 1;
+  padding: 10px 0 5px 0;
+}
+#timesheet_timetrackings > div > div:before,
+#timesheet_timetrackings > div > div:after {
+  display: table;
+  content: "";
+}
+#timesheet_timetrackings > div > div:after {
+  clear: both;
+}
+#timesheet_timetrackings > div > div > div {
+  float: left;
+  margin-right: 15px;
+}
+#timesheet_timetrackings > div > div > div input[type=text] {
+  width: 50px;
+  text-align: center;
+}
 @media (max-width: 480px) {
   
 }

@@ -5,6 +5,7 @@ namespace PressPlay\CoreBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\UniqueConstraint;
 use Doctrine\Common\Collections\ArrayCollection;
+use \DateTime;
 
 /**
  * PressPlay\CoreBundle\Entity\TimeSheet
@@ -181,5 +182,16 @@ class TimeSheet
     public function getAbsent()
     {
         return $this->absent;
-    }    
+    }  
+    
+    public function getTotalHours(){
+        
+        $hours = 0;
+        
+        foreach ($this->timetrackings as $timetracking) {
+            $hours += $timetracking->getHours();
+        }
+        
+        return $hours;
+    }
 }

@@ -3,6 +3,7 @@
 namespace PressPlay\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use \DateTime;
 
 /**
  * PressPlay\CoreBundle\Entity\TimeTracking
@@ -137,5 +138,13 @@ class TimeTracking
     public function getTimesheet()
     {
         return $this->timesheet;
+    }
+    
+    public function getHours(){
+        if($this->startTime == null || $this->stopTime == null){
+            return 0;
+        }
+        
+        return $this->startTime->diff($this->stopTime)->format('%h')+$this->adjustment;
     }
 }
