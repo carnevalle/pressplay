@@ -11,10 +11,10 @@ class TimeTrackingType extends AbstractType
     {
         $builder
             ->add('startTime', null, array(
-                'widget' => 'text'
+                'widget' => 'single_text'
             ))
             ->add('stopTime', null, array(
-                'widget' => 'text'
+                'widget' => 'single_text'
             ))
             ->add('adjustment', 'number', array(
                 'precision' => 2
