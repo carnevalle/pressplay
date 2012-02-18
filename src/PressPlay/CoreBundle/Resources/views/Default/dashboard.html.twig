@@ -33,10 +33,10 @@
 {% endblock %}
 
 {% block field_widget %}
-    {% set type = type|default('number') %}
-    <input type="{{ type }}" {{ block('widget_attributes') }} value="{{ value }}" />
-{% endblock field_widget %}
-
+    {% set type = type|default('time') %}
+    <input type="{{ type }}" {{ block('widget_attributes') }} value="{{ value }}" {% for attrname,attrvalue in attr %} {{attrname}}="{{attrvalue}}"{% endfor %} />
+{% endblock field_widget %}   
+    
 {% block header %}
 <script language="javascript"> 
 

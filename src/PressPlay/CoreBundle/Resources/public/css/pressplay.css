@@ -156,7 +156,8 @@ ul.stats-tabs li:last-child {
   margin-right: 15px;
 }
 #timesheet_timetrackings > div > div > div input[type=text],
-#timesheet_timetrackings > div > div > div input[type=number] {
+#timesheet_timetrackings > div > div > div input[type=number],
+#timesheet_timetrackings > div > div > div input[type=time] {
   width: 50px;
   text-align: center;
 }
