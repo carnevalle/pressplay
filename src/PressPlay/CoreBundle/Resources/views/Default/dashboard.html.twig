@@ -33,7 +33,7 @@
 {% endblock %}
 
 {% block field_widget %}
-    {% set type = type|default('time') %}
+    {% set type = type|default('number') %}
     <input type="{{ type }}" {{ block('widget_attributes') }} value="{{ value }}" {% for attrname,attrvalue in attr %} {{attrname}}="{{attrvalue}}"{% endfor %} />
 {% endblock field_widget %}   
     
