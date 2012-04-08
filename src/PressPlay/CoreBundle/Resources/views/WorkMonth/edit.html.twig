@@ -1,0 +1,30 @@
+{% extends 'PressPlayCoreBundle::layout.html.twig' %}
+
+{% block body %}
+<h1>WorkMonth edit</h1>
+
+<form action="{{ path('admin_workmonth_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
+    {{ form_widget(edit_form) }}
+        
+    <button class="btn btn-primary" type="submit"><i class="icon-ok-sign icon-white"></i> Save</button> 
+</form>
+
+<form action="{{ path('admin_workmonth_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(add_employee_form) }}>
+    {{ form_widget(add_employee_form) }}
+    <button class="btn btn-success" type="submit"><i class="icon-plus icon-white"></i> Add Employee</button> 
+</form>
+
+<ul class="record_actions">
+    <li>
+        <a href="{{ path('admin_workmonth') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <form action="{{ path('admin_workmonth_delete', { 'id': entity.id }) }}" method="post">
+            {{ form_widget(delete_form) }}
+            <button type="submit">Delete</button>
+        </form>
+    </li>
+</ul>
+{% endblock %}

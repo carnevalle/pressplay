@@ -1,0 +1,44 @@
+{% extends 'PressPlayCoreBundle::layout.html.twig' %}
+
+{% block header %}
+<script language="javascript"> 
+
+    function addNewEmployeeToWorkMonth() {
+        // Get the div that holds the collection of tags
+        var collectionHolder = $('#workmonth_employees');
+        // Get the data-prototype we explained earlier
+        var prototype = collectionHolder.attr('data-prototype');
+        // Replace '$$name$$' in the prototype's HTML to
+        // instead be a number based on the current collection's length.
+        form = prototype.replace(/\$\$name\$\$/g, collectionHolder.children().length);
+        // Display the form in the page
+        collectionHolder.append(form);
+    }
+
+    $(document).ready(function() {          
+        $('a.add_new').click(function(event){
+            
+            addNewEmployeeToWorkMonth();
+        });
+    });
+
+</script> 
+
+{% endblock %}
+
+{% block body %}
+<h1>WorkMonth creation</h1>
+
+<form action="{{ path('admin_workmonth_create') }}" method="post" {{ form_enctype(form) }}>
+    {{ form_widget(form) }}            
+    <button class="btn btn-primary" type="submit"><i class="icon-ok-sign icon-white"></i> Save</button>  
+</form>
+
+<ul class="record_actions">
+    <li>
+        <a href="{{ path('admin_workmonth') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock %}

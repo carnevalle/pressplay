@@ -20,7 +20,7 @@ security:
                 always_use_default_target_path: true
                 default_target_path: /dashboard
                 login_path: /
-            logout:       true
+            logout: true
             anonymous:    true
             
 

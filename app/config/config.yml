@@ -66,3 +66,6 @@ fos_user:
     user_class: PressPlay\CoreBundle\Entity\User    
     service:
             user_manager: pressplay_user.my_user_manager
+    registration:
+            form:
+                type: pressplay_user_registration            

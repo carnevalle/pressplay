@@ -3,3 +3,8 @@ services:
         class: PressPlay\UserBundle\Model\PressPlayUserManager
         public: false
         parent: fos_user.user_manager.default
+    pressplay_user.registration.form.type:
+        class: PressPlay\UserBundle\Form\Type\RegistrationFormType
+        arguments: [%fos_user.model.user.class%]
+        tags:
+            - { name: form.type, alias: pressplay_user_registration }        

@@ -1,0 +1,52 @@
+{% extends 'PressPlayCoreBundle::layout.html.twig' %}
+
+{% block header %}
+<script language="javascript">
+
+    $(document).ready(function() {
+    });
+
+</script>
+{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="span6">   
+        <h1>Medarbejdere</h1>
+        
+        <table class="table table-condensed table-striped">
+        {% for user in users %}
+            <tr><td>{{ user.name }}</td></tr>
+        {% endfor %} 
+        </table>
+        
+        <hr/>
+
+        <h3>Opret ny medarbejder</h3>
+        {% for key, message in app.session.getFlashes() %}
+        <div class="{{ key }} alert alert-success">
+            {{ message|trans({}, 'FOSUserBundle') }}
+        </div>
+        {% endfor %}
+
+        <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(create_user_form) }} method="POST">
+            {{ form_widget(create_user_form) }}
+            <div>
+                <button type="submit" class="btn btn-primary">Create Employee</button>
+            </div>
+        </form>        
+        
+    </div>
+    <div class="span3">   
+        <h1>Måneder</h1>
+        <table class="table table-condensed table-striped">
+        {% for workmonth in workmonths %}
+            <tr><td>{{ workmonth.month }} ({{ workmonth.year }})</td></tr>
+        {% endfor %} 
+        </table>
+    </div>        
+    <div class="span3">   
+        Tom kolonne
+    </div>         
+</div>
+{% endblock %}

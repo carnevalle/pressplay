@@ -23,27 +23,27 @@ class User extends BaseUser
     /**
      * @var string $firstname
      *
-     * @ORM\Column(name="firstname", type="string", length=255, nullable=true)
+     * @ORM\Column(name="name", type="string", length=255, nullable=true)
      */
-    private $firstname;
-    
-    /**
-     * @var string $lastname
-     *
-     * @ORM\Column(name="lastname", type="string", length=255, nullable=true)
-     */
-    private $lastname;      
+    private $name;   
     
     /**
      *
      * @ORM\OneToMany(targetEntity="TimeSheet", mappedBy="user")
      */
-    protected $timesheets;    
+    protected $timesheets;   
+    
+    /**
+     *
+     * @ORM\OneToMany(targetEntity="WorkMonthEmployee", mappedBy="user")
+     */
+    protected $workmonths;      
 
     public function __construct()
     {
         parent::__construct();
         $this->timesheets = new ArrayCollection();
+        $this->workmonths = new ArrayCollection();
     }
 
     /**
@@ -56,35 +56,21 @@ class User extends BaseUser
         return $this->id;
     }
 
-    public function getFirstname()
+    public function setEmail($email)
     {
-        return $this->firstname;
+        parent::setEmail($email);
+        $this->setUsername($email);
+    }
+
+    public function getName()
+    {
+        return $this->name;
     }    
 
-    public function setFirstname($firstname)
+    public function setName($name)
     {
-        $this->firstname = $firstname;
-    }    
-    
-    public function getLastname()
-    {
-        return $this->lastname;
-    }    
-    
-    public function setLastname($lastname)
-    {
-        $this->lastname = $lastname;
-    }  
-    
-    /**
-     * Get full name
-     *
-     * @return string 
-     */
-    public function getFullname()
-    {
-        return $this->firstname." ".$this->lastname;
-    }     
+        $this->name = $name;
+    }      
     
     /**
      * Add timesheets
@@ -104,5 +90,35 @@ class User extends BaseUser
     public function getTimesheets()
     {
         return $this->timesheets;
+    }
+    
+    /**
+     * Add workmonts
+     *
+     * @param PressPlay\CoreBundle\Entity\TimeSheet $workmonths
+     */
+    public function addWorkMonthEmployee(\PressPlay\CoreBundle\Entity\WorkMonthEmployee $workmonths)
+    {
+        $this->workmonths[] = $workmonths;
+    }
+
+    /**
+     * Get workmonts
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getWorkMonthEmployee()
+    {
+        return $this->workmonths;
+    }    
+
+    /**
+     * Get workmonths
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getWorkmonths()
+    {
+        return $this->workmonths;
     }
 }
