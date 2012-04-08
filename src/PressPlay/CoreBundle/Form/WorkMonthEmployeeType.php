@@ -10,11 +10,18 @@ class WorkMonthEmployeeType extends AbstractType
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder
+            ->add('user')
             ->add('workhours')
             ->add('workdays')
-            ->add('user')
         ;
     }
+
+    public function getDefaultOptions(array $options)
+    {
+        return array(
+            'data_class' => 'PressPlay\CoreBundle\Entity\WorkMonthEmployee',
+        );
+    } 
 
     public function getName()
     {

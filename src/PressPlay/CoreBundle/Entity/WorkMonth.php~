@@ -131,16 +131,6 @@ class WorkMonth
     }
 
     /**
-     * Set employees
-     *
-     * @param PressPlay\CoreBundle\Entity\WorkMonthEmployee $employees
-     */
-    public function setEmployees($employees)
-    {
-        $this->employees = $employees;
-    }  
-
-    /**
      * Get employees
      *
      * @return Doctrine\Common\Collections\Collection 
@@ -152,15 +142,5 @@ class WorkMonth
     
     public function __toString(){
         return $this->month." ".$this->year;
-    }
-
-    /**
-     * Get date
-     *
-     * @return date 
-     */
-    public function getDate()
-    {
-        return $this->date;
     }
 }

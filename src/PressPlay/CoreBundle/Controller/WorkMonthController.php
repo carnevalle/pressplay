@@ -10,6 +10,7 @@ use PressPlay\CoreBundle\Entity\WorkMonth;
 use PressPlay\CoreBundle\Form\WorkMonthType;
 use PressPlay\CoreBundle\Entity\WorkMonthEmployee;
 use PressPlay\CoreBundle\Form\WorkMonthEmployeeType;
+use \DateTime;
 
 /**
  * WorkMonth controller.
@@ -64,11 +65,11 @@ class WorkMonthController extends Controller
      */
     public function newAction()
     {
-        $entity = new WorkMonth();
-        $form   = $this->createForm(new WorkMonthType(), $entity);   
-        
+        $workmonth = new WorkMonth();
+        $form   = $this->createForm(new WorkMonthType(), $workmonth);   
+
         return array(
-            'entity' => $entity,
+            'entity' => $workmonth,
             'form'   => $form->createView(),
         );
     }

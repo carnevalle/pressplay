@@ -136,28 +136,37 @@ ul.stats-tabs li:last-child {
 .month-navigation .selected a {
   font-weight: bold;
 }
-#timesheet_timetrackings > div > label {
+#timesheet_timetrackings > div > label,
+#workmonth_employees > div > label {
   display: none;
 }
-#timesheet_timetrackings > div > div {
+#timesheet_timetrackings > div > div,
+#workmonth_employees > div > div {
   *zoom: 1;
   padding: 10px 0 5px 0;
 }
 #timesheet_timetrackings > div > div:before,
-#timesheet_timetrackings > div > div:after {
+#workmonth_employees > div > div:before,
+#timesheet_timetrackings > div > div:after,
+#workmonth_employees > div > div:after {
   display: table;
   content: "";
 }
-#timesheet_timetrackings > div > div:after {
+#timesheet_timetrackings > div > div:after,
+#workmonth_employees > div > div:after {
   clear: both;
 }
-#timesheet_timetrackings > div > div > div {
+#timesheet_timetrackings > div > div > div,
+#workmonth_employees > div > div > div {
   float: left;
   margin-right: 15px;
 }
 #timesheet_timetrackings > div > div > div input[type=text],
+#workmonth_employees > div > div > div input[type=text],
 #timesheet_timetrackings > div > div > div input[type=number],
-#timesheet_timetrackings > div > div > div input[type=time] {
+#workmonth_employees > div > div > div input[type=number],
+#timesheet_timetrackings > div > div > div input[type=time],
+#workmonth_employees > div > div > div input[type=time] {
   width: 50px;
   text-align: center;
 }

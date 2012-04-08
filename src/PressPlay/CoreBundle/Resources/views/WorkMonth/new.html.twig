@@ -1,5 +1,42 @@
 {% extends 'PressPlayCoreBundle::layout.html.twig' %}
 
+{% form_theme form _self %}
+
+{% block form_widget %}
+{% spaceless %}
+    <div {{ block('widget_container_attributes') }}>
+        {{ block('field_rows') }}
+        {{ form_rest(form) }}
+    </div>
+{% endspaceless %}
+{% endblock form_widget %}
+
+{% block field_row %}
+{% spaceless %}
+    <div>
+        {{ form_label(form, label|default(null)) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form) }}
+    </div>
+{% endspaceless %}
+{% endblock field_row %}
+
+{% block _workmonth_employees_widget %}
+{% spaceless %}
+    {% if prototype is defined %}
+        {% set attr = attr|merge({'data-prototype': form_row(prototype) }) %}
+    {% endif %}
+    <div class="employee-form-container">
+    {{ block('form_widget') }}
+    </div>        
+{% endspaceless %}
+{% endblock %}
+
+{% block field_widget %}
+    {% set type = type|default('number') %}
+    <input type="{{ type }}" {{ block('widget_attributes') }} value="{{ value }}" {% for attrname,attrvalue in attr %} {{attrname}}="{{attrvalue}}"{% endfor %} />
+{% endblock field_widget %}  
+
 {% block header %}
 <script language="javascript"> 
 
@@ -17,7 +54,6 @@
 
     $(document).ready(function() {          
         $('a.add_new').click(function(event){
-            
             addNewEmployeeToWorkMonth();
         });
     });
@@ -30,7 +66,17 @@
 <h1>WorkMonth creation</h1>
 
 <form action="{{ path('admin_workmonth_create') }}" method="post" {{ form_enctype(form) }}>
-    {{ form_widget(form) }}            
+    {{ form_row(form.month) }}
+    {{ form_row(form.year) }}
+    
+    <hr>
+
+    {{ form_row(form.employees) }}
+    {{ form_rest(form) }}
+
+    <hr>     
+
+    <a class="btn btn-success add_new"><i class="icon-plus icon-white"></i> Add new employee</a>   
     <button class="btn btn-primary" type="submit"><i class="icon-ok-sign icon-white"></i> Save</button>  
 </form>
 
