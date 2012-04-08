@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping\UniqueConstraint;
 /**
  * PressPlay\CoreBundle\Entity\WorkMonthEmployee
  *
- * @ORM\Table(uniqueConstraints={@UniqueConstraint(name="one_month_per_user", columns={"user_id", "workmonth_id"})})
+ * @ORM\Table(uniqueConstraints={@UniqueConstraint(name="no_duplicate_user_per_month", columns={"user_id", "workmonth_id"})})
  * @ORM\Entity
  */
 class WorkMonthEmployee

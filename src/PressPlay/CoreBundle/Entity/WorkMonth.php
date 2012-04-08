@@ -4,11 +4,12 @@ namespace PressPlay\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping\UniqueConstraint;
 
 /**
  * PressPlay\CoreBundle\Entity\WorkMonth
  *
- * @ORM\Table()
+ * @ORM\Table(uniqueConstraints={@UniqueConstraint(name="no_duplicate_months", columns={"date"})})
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks()
  */
@@ -117,7 +118,7 @@ class WorkMonth
     public function getFormattedDate(){
 
         setlocale(LC_TIME, "da_DK");
-        return strftime("%B %G", mktime(0, 0, 0, 1, $this->month, $this->year));
+        return strftime("%B %Y", $this->date->getTimestamp());
     }
 
     /**

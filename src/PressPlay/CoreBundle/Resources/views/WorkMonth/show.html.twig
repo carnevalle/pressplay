@@ -4,15 +4,15 @@
     <tbody>
         <tr>
             <th>Id</th>
-            <td>{{ entity.id }}</td>
+            <td>{{ workmonth.id }}</td>
         </tr>
         <tr>
             <th>Month</th>
-            <td>{{ entity.month }}</td>
+            <td>{{ workmonth.month }}</td>
         </tr>
         <tr>
             <th>Year</th>
-            <td>{{ entity.year }}</td>
+            <td>{{ workmonth.year }}</td>
         </tr>
     </tbody>
 </table>
@@ -24,12 +24,12 @@
         </a>
     </li>
     <li>
-        <a href="{{ path('admin_workmonth_edit', { 'id': entity.id }) }}">
+        <a href="{{ path('admin_workmonth_edit', { 'id': workmonth.id }) }}">
             Edit
         </a>
     </li>
     <li>
-        <form action="{{ path('admin_workmonth_delete', { 'id': entity.id }) }}" method="post">
+        <form action="{{ path('admin_workmonth_delete', { 'id': workmonth.id }) }}" method="post">
             {{ form_widget(delete_form) }}
             <button type="submit">Delete</button>
         </form>

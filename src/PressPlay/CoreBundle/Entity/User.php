@@ -121,4 +121,8 @@ class User extends BaseUser
     {
         return $this->workmonths;
     }
+
+    public function __toString(){
+        return $this->name;
+    }
 }

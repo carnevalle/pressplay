@@ -44,16 +44,16 @@ class WorkMonthController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
 
-        $entity = $em->getRepository('PressPlayCoreBundle:WorkMonth')->find($id);
+        $workmonth = $em->getRepository('PressPlayCoreBundle:WorkMonth')->find($id);
 
-        if (!$entity) {
+        if (!$workmonth) {
             throw $this->createNotFoundException('Unable to find WorkMonth entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-            'entity'      => $entity,
+            'workmonth'      => $workmonth,
             'delete_form' => $deleteForm->createView(),        );
     }
 
@@ -69,7 +69,7 @@ class WorkMonthController extends Controller
         $form   = $this->createForm(new WorkMonthType(), $workmonth);   
 
         return array(
-            'entity' => $workmonth,
+            'workmonth' => $workmonth,
             'form'   => $form->createView(),
         );
     }
@@ -83,22 +83,27 @@ class WorkMonthController extends Controller
      */
     public function createAction()
     {
-        $entity  = new WorkMonth();
+        $workmonth  = new WorkMonth();
         $request = $this->getRequest();
-        $form    = $this->createForm(new WorkMonthType(), $entity);
+        $form    = $this->createForm(new WorkMonthType(), $workmonth);
         $form->bindRequest($request);
 
         if ($form->isValid()) {
+
+            $employees = $workmonth->getEmployees();
+            foreach($employees as $employee){
+                $employee->setWorkmonth($workmonth);
+            }      
+
             $em = $this->getDoctrine()->getEntityManager();
-            $em->persist($entity);
+            $em->persist($workmonth);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('admin_workmonth_show', array('id' => $entity->getId())));
-            
+            return $this->redirect($this->generateUrl('admin_workmonth_show', array('id' => $workmonth->getId())));
         }
 
         return array(
-            'entity' => $entity,
+            'workmonth' => $workmonth,
             'form'   => $form->createView()
         );
     }
@@ -121,16 +126,11 @@ class WorkMonthController extends Controller
         
         $editForm = $this->createForm(new WorkMonthType(), $workmonth);
         $deleteForm = $this->createDeleteForm($id);
-
-        $employee = new WorkMonthEmployee();
-        $employee->setWorkmonth($workmonth);
-        $add_employee_form   = $this->createForm(new WorkMonthEmployeeType(), $employee);        
         
         return array(
-            'entity'      => $workmonth,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-            'add_employee_form' => $add_employee_form->createView(),            
+            'workmonth'      => $workmonth,
+            'form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),         
         );
     }
 
@@ -145,13 +145,19 @@ class WorkMonthController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
 
-        $entity = $em->getRepository('PressPlayCoreBundle:WorkMonth')->find($id);
+        $workmonth = $em->getRepository('PressPlayCoreBundle:WorkMonth')->find($id);
 
-        if (!$entity) {
+        if (!$workmonth) {
             throw $this->createNotFoundException('Unable to find WorkMonth entity.');
         }
 
-        $editForm   = $this->createForm(new WorkMonthType(), $entity);
+        // Create an array of the current Tag objects in the database
+        $originalEmployees = array();
+        foreach ($workmonth->getEmployees() as $employee){
+            $originalEmployees[] = $employee;  
+        }
+
+        $editForm   = $this->createForm(new WorkMonthType(), $workmonth);
         $deleteForm = $this->createDeleteForm($id);
 
         $request = $this->getRequest();
@@ -159,14 +165,35 @@ class WorkMonthController extends Controller
         $editForm->bindRequest($request);
 
         if ($editForm->isValid()) {
-            $em->persist($entity);
+
+            $employees = $workmonth->getEmployees();
+
+            // filter $originalEmployees to contain employees no longer present
+            foreach ($employees as $employee) {
+                foreach ($originalEmployees as $key => $toDel) {
+                    if ($toDel->getId() === $employee->getId()) {
+                        unset($originalEmployees[$key]);
+                    }
+                }
+            }
+
+            // We delete the employees that are no longer attached to this month
+            foreach ($originalEmployees as $employee) {
+                $em->remove($employee);
+            }            
+
+            foreach($employees as $employee){
+                $employee->setWorkmonth($workmonth);
+            }
+
+            $em->persist($workmonth);
             $em->flush();
 
             return $this->redirect($this->generateUrl('admin_workmonth_edit', array('id' => $id)));
         }
 
         return array(
-            'entity'      => $entity,
+            'workmonth'      => $workmonth,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
@@ -187,13 +214,13 @@ class WorkMonthController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getEntityManager();
-            $entity = $em->getRepository('PressPlayCoreBundle:WorkMonth')->find($id);
+            $workmonth = $em->getRepository('PressPlayCoreBundle:WorkMonth')->find($id);
 
-            if (!$entity) {
+            if (!$workmonth) {
                 throw $this->createNotFoundException('Unable to find WorkMonth entity.');
             }
 
-            $em->remove($entity);
+            $em->remove($workmonth);
             $em->flush();
         }
 

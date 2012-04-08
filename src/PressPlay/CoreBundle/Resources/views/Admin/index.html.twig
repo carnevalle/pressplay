@@ -15,8 +15,9 @@
         <h1>Medarbejdere</h1>
         
         <table class="table table-condensed table-striped">
+            <tr><th>Employee</th><th>Months</th></tr>
         {% for user in users %}
-            <tr><td>{{ user.name }}</td></tr>
+            <tr><td>{{ user.name }}</td><td>{{user.workmonths|length}}</td></tr>
         {% endfor %} 
         </table>
         
@@ -46,6 +47,7 @@
             </td></tr>
         {% endfor %} 
         </table>
+        <a href="{{ path('admin_workmonth_new') }}" class="btn">Create new month</a>
     </div>        
     <div class="span3">   
         Tom kolonne
