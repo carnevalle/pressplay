@@ -97,6 +97,10 @@
 .factbox.negative.active {
   background-color: #942a25 \9;
 }
+.admin-user-table .stat {
+  width: 50px;
+  text-align: center;
+}
 .table th input,
 .table td input {
   margin-bottom: 0px;

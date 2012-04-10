@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping\UniqueConstraint;
  * PressPlay\CoreBundle\Entity\WorkMonth
  *
  * @ORM\Table(uniqueConstraints={@UniqueConstraint(name="no_duplicate_months", columns={"date"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="PressPlay\CoreBundle\Repository\WorkMonthRepository")
  * @ORM\HasLifecycleCallbacks()
  */
 class WorkMonth
@@ -115,9 +115,13 @@ class WorkMonth
         return $this->month;
     }
 
+    public function getDatestring(){
+        return $this->date->format("Ymd");
+    }
+
     public function getFormattedDate(){
 
-        setlocale(LC_TIME, "da_DK");
+        //setlocale(LC_TIME, "da_DK");
         return strftime("%B %Y", $this->date->getTimestamp());
     }
 

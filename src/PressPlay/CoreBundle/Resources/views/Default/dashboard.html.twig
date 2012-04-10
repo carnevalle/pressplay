@@ -1,5 +1,6 @@
 {% extends 'PressPlayCoreBundle::layout.html.twig' %}
 
+{#
 {% form_theme form _self %}
 
 {% block form_widget %}
@@ -36,7 +37,8 @@
     {% set type = type|default('number') %}
     <input type="{{ type }}" {{ block('widget_attributes') }} value="{{ value }}" {% for attrname,attrvalue in attr %} {{attrname}}="{{attrvalue}}"{% endfor %} />
 {% endblock field_widget %}   
-    
+#}    
+
 {% block header %}
 <script language="javascript"> 
 
@@ -57,6 +59,12 @@
             
             addNewTimeRegistration();
         });
+
+        var baseurl = "{{path('dashboard_home')}}";
+
+        $("#monthselector").on("change",function(){
+            window.location = baseurl+"/"+$(this).val();
+        })
     });
 
 </script> 
@@ -66,91 +74,117 @@
 {% block body %}
 <div class="row">
     <div class="span12">
-        <h1>{{ timesheet.date|date("j. F Y") }} <small>{{app.user.name}}</small></h1>
+        {% if hastimesheet %}
+            <h1>{{ timesheet.date|date("j. F Y") }} <small>{{app.user.name}}</small></h1>
+        {% else %}
+            <h1>{{ date|date("j. F Y") }} <small>{{app.user.name}}</small></h1>
+        {% endif %}
     </div>
 </div>        
     <hr />
- <div class="row">       
+
+<div class="row">       
     <div class="span9">
 
-        {% if app.session.hasFlash('confirmation') %}
-            <div class="alert alert-success">
-                <a class="close" data-dismiss="alert">×</a>
-                <h4 class="alert-heading">Your time has been registered!</h4>                
-                Have a nice day!
-                {{ app.session.flash('confirmation') }}
-            </div>        
+        {% if hastimesheet %}
+            {% if app.session.hasFlash('confirmation') %}
+                <div class="alert alert-success">
+                    <a class="close" data-dismiss="alert">×</a>
+                    <h4 class="alert-heading">Your time has been registered!</h4>                
+                    Have a nice day!
+                    {{ app.session.flash('confirmation') }}
+                </div>        
+            {% endif %}        
+            
+            <form action="{{ path('timesheet_update', { 'id': timesheet.id }) }}" method="post" {{ form_enctype(form) }}>        
+                
+                {{ form_row(form.timetrackings) }}
+                
+                <hr>
+                
+                {{ form_rest(form) }}                 
+                
+                <hr>
+                
+                <a class="btn btn-success add_new_timeregistration"><i class="icon-plus icon-white"></i> Add new registration</a>               
+                <button class="btn btn-primary" type="submit"><i class="icon-ok-sign icon-white"></i> Save registrations</button>               
+            </form>
+        {% else %}    
+        <div class="alert alert-info">
+            We have no workday registered for this day yet.
+        </div>
+
         {% endif %}        
-        
-        <form action="{{ path('timesheet_update', { 'id': timesheet.id }) }}" method="post" {{ form_enctype(form) }}>        
-            
-            {{ form_row(form.timetrackings) }}
-            
-            <hr>
-            
-            {{ form_rest(form) }}                 
-            
-            <hr>
-            
-            <a class="btn btn-success add_new_timeregistration"><i class="icon-plus icon-white"></i> Add new registration</a>               
-            <button class="btn btn-primary" type="submit"><i class="icon-ok-sign icon-white"></i> Save registrations</button>               
-        </form>
-        
+
     </div>        
     <div class="span3">
-        
-        {% if timesheet.totalHours < 8 %}
-        {% set colorcss = "negative" %}
-        {% else %}
-        {% set colorcss = "positive" %}
-        {% endif %}
-        <div class="factbox {{colorcss}}">
-            <span>{{timesheet.totalHours}}</span>
-            Hours today
-        </div>
-            
-        <div class="month-navigation">
-            <table class="table table-striped table-condensed">
-                
-                {% for i in 1..timesheet.date|date('t') %}
-                    {% if i < 10 %}
-                        {% set day = "0"~i %}    
+        {% if hastimesheet %}
+            {% if timesheet.totalHours < selectedworkmonth.workDayAverageHours %}
+            {% set colorcss = "negative" %}
+            {% else %}
+            {% set colorcss = "positive" %}
+            {% endif %}
+            <div class="factbox {{colorcss}}">
+                <span>{{timesheet.totalHours}}</span>
+                Hours today
+            </div>
+        {% endif %}    
+
+        <div class="month-navigation">         
+            <strong>Vælg måned</strong>
+            <select id="monthselector" class="span3">
+                {% for workmonth in user.workmonths %}
+                    {% if hastimesheet and selectedworkmonth.id == workmonth.id %}
+                        <option value="{{workmonth.datestring}}" selected>{{workmonth.formattedDate}}</option>
                     {% else %}
-                        {% set day = i %}
+                        <option value="{{workmonth.datestring}}">{{workmonth.formattedDate}}</option>
                     {% endif %}
-                
-                
-                    {% set d = timesheet.date|date('Y') ~ timesheet.date|date('m') ~ day %}
+                {% endfor %}
+            </select>
 
-                    {% set css = "" %}
-                    {% if timesheet.date|date("Ymd") == d %}
-                    {% set css = "selected" %}
-                    {% elseif today|date("Ymd") == d %}    
-                    {% set css = "today" %}
-                    {% endif %}                 
-                
-                <tr class="{{css}}">
-                    <td>        
-                        <a href="{{ path('dashboard_home', {'date': d })}}" style="display: block">
-                            {% if timesheet.date|date("Ymd") == d %}
-                                <span class="icon-play"></span>    
-                            {% endif %}                       
-                            {{i}}. {{ timesheet.date|date('F') }}
-                        
-                            {% if timesheet.date|date("Ymd") == d %}
-                                <span class="label label-info">selected</span>    
-                            {% endif %}                             
+            {% if hastimesheet %}
+                <table class="table table-striped table-condensed">
+                    
+                    {% for i in 1..timesheet.date|date('t') %}
+                        {% if i < 10 %}
+                            {% set day = "0"~i %}    
+                        {% else %}
+                            {% set day = i %}
+                        {% endif %}
+                    
+                    
+                        {% set d = timesheet.date|date('Y') ~ timesheet.date|date('m') ~ day %}
+
+                        {% set css = "" %}
+                        {% if timesheet.date|date("Ymd") == d %}
+                        {% set css = "selected" %}
+                        {% elseif today|date("Ymd") == d %}    
+                        {% set css = "today" %}
+                        {% endif %}                 
+                    
+                    <tr class="{{css}}">
+                        <td>        
+                            <a href="{{ path('dashboard_home', {'date': d })}}" style="display: block">
+                                {% if timesheet.date|date("Ymd") == d %}
+                                    <span class="icon-play"></span>    
+                                {% endif %}                       
+                                {{i}}. {{ timesheet.date|date('F') }}
                             
-                            {% if today|date("Ymd") == d %}
-                                <span class="label">today</span>    
-                            {% endif %}                               
-                        </a>
-                    </td>
-                </tr>
+                                {% if timesheet.date|date("Ymd") == d %}
+                                    <span class="label label-info">selected</span>    
+                                {% endif %}                             
+                                
+                                {% if today|date("Ymd") == d %}
+                                    <span class="label">today</span>    
+                                {% endif %}                               
+                            </a>
+                        </td>
+                    </tr>
 
-                {% endfor %} 
-                
-            </table>
+                    {% endfor %} 
+                    
+                </table>
+            {% endif %}
         </div>
     </div>                
 </div>

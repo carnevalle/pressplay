@@ -58,6 +58,13 @@ class TimeSheet
      */
     protected $timetrackings;      
     
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="WorkMonthEmployee", inversedBy="timesheets")
+     * @ORM\JoinColumn(name="workmonth_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    private $workmonth;
+
     public function __construct()
     {
         $this->timetrackings = new ArrayCollection();
@@ -193,5 +200,25 @@ class TimeSheet
         }
         
         return $hours;
+    }
+
+    /**
+     * Set workmonth
+     *
+     * @param PressPlay\CoreBundle\Entity\WorkMonthEmployee $workmonth
+     */
+    public function setWorkmonth(\PressPlay\CoreBundle\Entity\WorkMonthEmployee $workmonth)
+    {
+        $this->workmonth = $workmonth;
+    }
+
+    /**
+     * Get workmonth
+     *
+     * @return PressPlay\CoreBundle\Entity\WorkMonthEmployee 
+     */
+    public function getWorkmonth()
+    {
+        return $this->workmonth;
     }
 }

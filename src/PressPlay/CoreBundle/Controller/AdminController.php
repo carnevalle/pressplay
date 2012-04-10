@@ -32,7 +32,7 @@ class AdminController extends Controller
         
         $users = $userManager->findUsers();
         
-        $workmonths = $em->getRepository('PressPlayCoreBundle:WorkMonth')->findAll();        
+        $workmonths = $em->getRepository('PressPlayCoreBundle:WorkMonth')->findAllByDate("DESC");        
         
         return array(
             'create_user_form' => $create_user_form->createView(),

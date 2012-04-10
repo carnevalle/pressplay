@@ -5,13 +5,13 @@ namespace PressPlay\CoreBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\UniqueConstraint;
 use Doctrine\Common\Collections\ArrayCollection;
+use \DateTime;
 
 /**
  * PressPlay\CoreBundle\Entity\TimeSheet
  *
  * @ORM\Table(uniqueConstraints={@UniqueConstraint(name="one_per_day", columns={"user_id", "date"})})
  * @ORM\Entity(repositoryClass="PressPlay\CoreBundle\Repository\TimeSheetRepository")
- * @ORM\Entity
  */
 class TimeSheet
 {
@@ -27,17 +27,24 @@ class TimeSheet
     /**
      * @var datetime $date
      *
-     * @ORM\Column(name="date", type="datetime")
+     * @ORM\Column(name="date", type="date")
      */
     private $date;
 
     /**
      * @var text $comment
      *
-     * @ORM\Column(name="comment", type="text")
+     * @ORM\Column(name="comment", type="text", nullable=true)
      */
     private $comment;
 
+    /**
+     * @var string $absent
+     *
+     * @ORM\Column(name="absent", type="string", length=255, nullable=true)
+     */
+    private $absent;     
+    
     /**
      *
      * @ORM\ManyToOne(targetEntity="User", inversedBy="timesheets")
@@ -47,10 +54,17 @@ class TimeSheet
 
     /**
      *
-     * @ORM\OneToMany(targetEntity="TimeTracking", mappedBy="timesheet")
+     * @ORM\OneToMany(targetEntity="TimeTracking", mappedBy="timesheet", cascade={"persist"})
      */
     protected $timetrackings;      
     
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="WorkMonthEmployee", inversedBy="timesheets")
+     * @ORM\JoinColumn(name="workmonth_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    private $workmonth;
+
     public function __construct()
     {
         $this->timetrackings = new ArrayCollection();
@@ -137,6 +151,16 @@ class TimeSheet
     }
 
     /**
+     * Set timetrackings
+     *
+     * @param PressPlay\CoreBundle\Entity\TimeTracking $timetrackings
+     */
+    public function setTimeTrackings($timetrackings)
+    {
+        $this->timetrackings = $timetrackings;
+    }    
+    
+    /**
      * Get timetrackings
      *
      * @return Doctrine\Common\Collections\Collection 
@@ -144,5 +168,37 @@ class TimeSheet
     public function getTimetrackings()
     {
         return $this->timetrackings;
+    }
+    
+
+    /**
+     * Set absent
+     *
+     * @param string $absent
+     */
+    public function setAbsent($absent)
+    {
+        $this->absent = $absent;
+    }
+
+    /**
+     * Get absent
+     *
+     * @return string 
+     */
+    public function getAbsent()
+    {
+        return $this->absent;
+    }  
+    
+    public function getTotalHours(){
+        
+        $hours = 0;
+        
+        foreach ($this->timetrackings as $timetracking) {
+            $hours += $timetracking->getHours();
+        }
+        
+        return $hours;
     }
 }

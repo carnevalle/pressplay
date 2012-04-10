@@ -4,12 +4,13 @@ namespace PressPlay\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\UniqueConstraint;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * PressPlay\CoreBundle\Entity\WorkMonthEmployee
  *
  * @ORM\Table(uniqueConstraints={@UniqueConstraint(name="no_duplicate_user_per_month", columns={"user_id", "workmonth_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="PressPlay\CoreBundle\Repository\WorkMonthEmployeeRepository")
  */
 class WorkMonthEmployee
 {
@@ -51,6 +52,17 @@ class WorkMonthEmployee
     private $workmonth;      
     
     /**
+     *
+     * @ORM\OneToMany(targetEntity="TimeSheet", mappedBy="workmonthemployee", cascade={"persist"})
+     */
+    private $timesheets;
+
+    public function __construct()
+    {
+        $this->timesheets = new ArrayCollection();
+    } 
+
+    /**
      * Get id
      *
      * @return integer 
@@ -58,6 +70,16 @@ class WorkMonthEmployee
     public function getId()
     {
         return $this->id;
+    }
+
+    public function getDatestring(){
+
+        return $this->workmonth->getDatestring();
+    }
+
+    public function getFormattedDate(){
+
+        return $this->workmonth->getFormattedDate();
     }
 
     /**
@@ -78,6 +100,15 @@ class WorkMonthEmployee
     public function getWorkhours()
     {
         return $this->workhours;
+    }
+
+    public function getWorkDayAverageHours(){
+
+        if($this->workdays == 0){
+            return $this->workhours;
+        }
+        
+        return $this->workhours / $this->workdays;
     }
 
     /**

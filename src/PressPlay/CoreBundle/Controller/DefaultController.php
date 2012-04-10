@@ -50,30 +50,49 @@ class DefaultController extends Controller
         }else{
             $date = DateTime::createFromFormat('Ymd', $date);    
         }
-        
+        $today = new DateTime();
+
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getEntityManager();
-        $timesheet = $em->getRepository('PressPlayCoreBundle:TimeSheet')->findOneTimeSheetByDateAndUser($date, $user);        
 
-        if($timesheet == null){
-            $timesheet = new TimeSheet();
-            $timesheet->setUser($user);
-            $timesheet->setDate($date);
-            $em->persist($timesheet);
-            $em->flush();                         
+        $workmonthemployee = $em->getRepository('PressPlayCoreBundle:WorkMonthEmployee')->findByDateAndUser($date,$user);
+        $latestWorkMonth = null;
+
+        // If no month for current date. Lets find the latest month then
+        if (!$workmonthemployee) {
+            $latestWorkMonth = $em->getRepository('PressPlayCoreBundle:WorkMonthEmployee')->findLatest($user);
         }
-        
-        
-        $today = new DateTime();
-        //$yesterday = strtotime($date->format('Ymd').' -1 day');
 
-        $form = $this->createForm(new TimeSheetType(), $timesheet);
-        
+        if ($workmonthemployee) {
+            $timesheet = $em->getRepository('PressPlayCoreBundle:TimeSheet')->findOneTimeSheetByDateAndUser($date, $user);        
+
+            if($timesheet == null){
+                $timesheet = new TimeSheet();
+                $timesheet->setUser($user);
+                $timesheet->setDate($date);
+                $timesheet->setWorkmonth($workmonthemployee);
+                $em->persist($timesheet);
+                $em->flush();                         
+            }
+
+            $form = $this->createForm(new TimeSheetType(), $timesheet);
+
+            return array(
+                'hastimesheet' => true,
+                'timesheet' => $timesheet,
+                'selectedworkmonth' => $workmonthemployee,
+                'today' => $today,
+                'user' => $user,
+                'form' => $form->createView(),
+                'date' => $date,
+            );            
+        }
+
         return array(
-            'timesheet' => $timesheet,
+            'hastimesheet' => false,
             'today' => $today,
-            //'yesterday' => $yesterday,
-            'form' => $form->createView()
-        );
+            'user' => $user,
+            'date' => $date,
+        );  
     }
 }
