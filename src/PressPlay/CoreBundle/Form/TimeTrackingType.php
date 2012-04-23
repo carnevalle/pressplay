@@ -21,8 +21,6 @@ class TimeTrackingType extends AbstractType
             ))
         ;
         
-        $builder->get('startTime')->setRequired(false);
-        $builder->get('stopTime')->setRequired(false);
         $builder->get('adjustment')->setRequired(false);
     }
     

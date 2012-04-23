@@ -1,6 +1,16 @@
+# Bootstrap
+app/bootstrap*
+
+# Symfony directories
+vendor/*
 */logs/*
 */cache/*
 web/uploads/*
-nbproject/*
+web/bundles/*
 
+# Configuration files
+app/config/parameters.ini
+
+# Local
+nbproject/*
 *.DS_Store

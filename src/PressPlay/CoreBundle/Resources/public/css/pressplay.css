@@ -140,31 +140,37 @@ ul.stats-tabs li:last-child {
 .month-navigation .selected a {
   font-weight: bold;
 }
-.ppform .employees {
+.ppform .employees,
+.ppform .timetrackings {
   list-style: none;
   margin-left: 0px;
 }
-.ppform .employees label {
-  display: none;
-}
-.ppform .employees div div {
+.ppform .employees div div,
+.ppform .timetrackings div div {
   *zoom: 1;
 }
 .ppform .employees div div:before,
-.ppform .employees div div:after {
+.ppform .timetrackings div div:before,
+.ppform .employees div div:after,
+.ppform .timetrackings div div:after {
   display: table;
   content: "";
 }
-.ppform .employees div div:after {
+.ppform .employees div div:after,
+.ppform .timetrackings div div:after {
   clear: both;
 }
-.ppform .employees div div div {
+.ppform .employees div div div,
+.ppform .timetrackings div div div {
   float: left;
   margin-right: 15px;
 }
 .ppform .employees div div div input[type=text],
+.ppform .timetrackings div div div input[type=text],
 .ppform .employees div div div input[type=number],
-.ppform .employees div div div input[type=time] {
+.ppform .timetrackings div div div input[type=number],
+.ppform .employees div div div input[type=time],
+.ppform .timetrackings div div div input[type=time] {
   width: 50px;
   text-align: center;
 }

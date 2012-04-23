@@ -19,12 +19,14 @@
 
         // Display the form in the page
         collectionHolder.append($li);
+
+        addDeleteLink($li, false);
     }
 
-    function addDeleteLink($tagFormLi) {
+    function addDeleteLink($tagFormLi, existing) {
 
         var $button = $('<a href="#">remove</a>');
-        var $container = $('<div style="line-height:27px"></div>').append($button);
+        var $container = $('<div style="line-height:70px"></div>').append($button);
         $tagFormLi.find('>div >div').append($container);
 
         $button.on('click', function(e) {
@@ -32,7 +34,12 @@
             e.preventDefault();
 
             // remove the li for the tag form
-            if(confirm('Are you sure you want to remove employee. This cannot be undone')){
+
+            if(existing){
+                if(confirm('Are you sure you want to remove employee. This cannot be undone')){
+                    $tagFormLi.remove();
+                }
+            }else{
                 $tagFormLi.remove();
             }
         });
@@ -41,7 +48,7 @@
     $(document).ready(function() {      
 
         $('ul.employees').find('li').each(function() {
-            addDeleteLink($(this));
+            addDeleteLink($(this), true);
         });
 
         $('a.add_new').on('click', function(e) {

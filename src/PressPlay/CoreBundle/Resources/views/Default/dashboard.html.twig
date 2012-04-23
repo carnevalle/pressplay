@@ -1,62 +1,61 @@
-{% extends 'PressPlayCoreBundle::layout.html.twig' %}
-
-{#
-{% form_theme form _self %}
-
-{% block form_widget %}
-{% spaceless %}
-    <div {{ block('widget_container_attributes') }}>
-        {{ block('field_rows') }}
-        {{ form_rest(form) }}
-    </div>
-{% endspaceless %}
-{% endblock form_widget %}
-
-{% block field_row %}
-{% spaceless %}
-    <div>
-        {{ form_label(form, label|default(null)) }}
-        {{ form_errors(form) }}
-        {{ form_widget(form) }}
-    </div>
-{% endspaceless %}
-{% endblock field_row %}
-
-{% block _timesheet_timetrackings_widget %}
-{% spaceless %}
-    {% if prototype is defined %}
-        {% set attr = attr|merge({'data-prototype': form_row(prototype) }) %}
-    {% endif %}
-    <div class="timetracking-form-container">
-    {{ block('form_widget') }}
-    </div>        
-{% endspaceless %}
-{% endblock %}
-
-{% block field_widget %}
-    {% set type = type|default('number') %}
-    <input type="{{ type }}" {{ block('widget_attributes') }} value="{{ value }}" {% for attrname,attrvalue in attr %} {{attrname}}="{{attrvalue}}"{% endfor %} />
-{% endblock field_widget %}   
-#}    
+{% extends 'PressPlayCoreBundle::layout.html.twig' %}   
 
 {% block header %}
 <script language="javascript"> 
 
     function addNewTimeRegistration() {
         // Get the div that holds the collection of tags
-        var collectionHolder = $('#timesheet_timetrackings');
+        var collectionHolder = $('ul.timetrackings');
+
         // Get the data-prototype we explained earlier
         var prototype = collectionHolder.attr('data-prototype');
+
         // Replace '$$name$$' in the prototype's HTML to
         // instead be a number based on the current collection's length.
         form = prototype.replace(/\$\$name\$\$/g, collectionHolder.children().length);
+
+        var $div =$('<div></div>').append(form);
+        var $li = $('<li></li>').append($div);
+
         // Display the form in the page
-        collectionHolder.append(form);
+        collectionHolder.append($li);
+
+        addDeleteLink($li, false);
     }
 
-    $(document).ready(function() {          
-        $('a.add_new_timeregistration').click(function(event){
-            
+    function addDeleteLink($tagFormLi, existing) {
+
+        var $button = $('<a href="#">remove</a>');
+        var $container = $('<div style="line-height:70px"></div>').append($button);
+        $tagFormLi.find('>div >div').append($container);
+
+        $button.on('click', function(e) {
+            // prevent the link from creating a "#" on the URL
+            e.preventDefault();
+
+            // remove the li for the tag form
+
+            if(existing){
+                if(confirm('Are you sure you want to remove time registration. This cannot be undone')){
+                    $tagFormLi.remove();
+                }
+            }else{
+                $tagFormLi.remove();
+            }
+        });
+    }
+
+    $(document).ready(function() {  
+
+        $('ul.timetrackings').find('li').each(function() {
+            addDeleteLink($(this), true);
+        });
+
+        $('a.add_new').on('click', function(e) {
+            // prevent the link from creating a "#" on the URL
+            e.preventDefault();
+
+            // add a new tag form (see next code block)
             addNewTimeRegistration();
         });
 
@@ -65,7 +64,7 @@
         $("#monthselector").on("change",function(){
             window.location = baseurl+"/"+$(this).val();
         })
-    });
+    });    
 
 </script> 
 
@@ -96,18 +95,21 @@
                 </div>        
             {% endif %}        
             
-            <form action="{{ path('timesheet_update', { 'id': timesheet.id }) }}" method="post" {{ form_enctype(form) }}>        
-                
-                {{ form_row(form.timetrackings) }}
-                
-                <hr>
-                
-                {{ form_rest(form) }}                 
-                
-                <hr>
-                
-                <a class="btn btn-success add_new_timeregistration"><i class="icon-plus icon-white"></i> Add new registration</a>               
-                <button class="btn btn-primary" type="submit"><i class="icon-ok-sign icon-white"></i> Save registrations</button>               
+            <form class="ppform" action="{{ path('timesheet_update', { 'id': timesheet.id }) }}" method="post" {{ form_enctype(form) }}>
+
+                <h3>Time Registrations</h3>
+                <ul class="timetrackings" data-prototype="{{ form_widget(form.timetrackings.get('prototype')) | e }}">
+                    {% for timetracking in form.timetrackings %}
+                        <li>{{ form_row(timetracking) }}</li>
+                    {% endfor %}                
+                </ul>            
+ 
+                {{ form_rest(form) }}
+
+                <hr/>
+
+                <a class="btn btn-success add_new"><i class="icon-plus icon-white"></i> Add new time registration</a>  
+                <button class="btn btn-primary" type="submit"><i class="icon-ok-sign icon-white"></i> Save</button>  
             </form>
         {% else %}    
         <div class="alert alert-info">

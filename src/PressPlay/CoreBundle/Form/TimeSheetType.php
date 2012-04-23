@@ -13,7 +13,9 @@ class TimeSheetType extends AbstractType
             ->add('timetrackings', 'collection', array(
                 'type' => new TimeTrackingType(),
                 'allow_add' => true,
-                'by_reference' => false,                
+                'allow_delete' => true,
+                'by_reference' => false,   
+                'label'     => ' '             
                 ))  
             ->add('absent', 'choice', array(
                 'choices' => array(

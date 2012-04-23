@@ -144,6 +144,12 @@ class TimeSheetController extends Controller
             throw $this->createNotFoundException('Unable to find TimeSheet entity.');
         }
 
+        // Create an array of the current Tag objects in the database
+        $originalTimeTrackings = array();
+        foreach ($timesheet->getTimetrackings() as $timetracking){
+            $originalTimeTrackings[] = $timetracking;  
+        }
+
         $editForm   = $this->createForm(new TimeSheetType(), $timesheet);
         $deleteForm = $this->createDeleteForm($id);
 
@@ -154,6 +160,21 @@ class TimeSheetController extends Controller
         if ($editForm->isValid()) {
             
             $timetrackings = $timesheet->getTimetrackings();
+
+            // filter $originalEmployees to contain employees no longer present
+            foreach ($timetrackings as $timetracking) {
+                foreach ($originalTimeTrackings as $key => $toDel) {
+                    if ($toDel->getId() === $timetracking->getId()) {
+                        unset($originalTimeTrackings[$key]);
+                    }
+                }
+            }
+
+            // We delete the employees that are no longer attached to this month
+            foreach ($originalTimeTrackings as $timetracking) {
+                $em->remove($timetracking);
+            }  
+
             foreach($timetrackings as $timetracking){
                 $timetracking->setTimesheet($timesheet);
             }                        
