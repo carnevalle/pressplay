@@ -1,5 +1,5 @@
 set :serverName,   "nogetmedkode.dk" # The server's hostname
-set :repository,   "file:///Users/troels.johnsen/Web/actualskill.dev"
+set :repository,   "file:///Users/troels.johnsen/Web/pressplay.dev"
 
 set :domain,      "time.pressplay.dk"
 set :deploy_to,   "/srv/www/time.pressplay.dk" # Remote location where the project will be stored
